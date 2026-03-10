@@ -1,4 +1,4 @@
-# Laboratorio 01
+# Laboratorio 08
 
 ## Instrucciones
 
@@ -32,44 +32,9 @@ ___
 
 ## Ejercicio 1
 
-Dado el nodo `root` de un árbol binario, invierta el árbol y retorne su raíz.
-
-### Ejemplo 1.1
-
-![fork button](images/invert1-tree.jpg)
-
-```
-root = [4,2,7,1,3,6,9]
-resultado = [4,7,2,9,6,3,1]
-```
-
-### Ejemplo 1.2
-
-![fork button](images/invert2-tree.jpg)
-
-```
-root = [2,1,3]
-resultado = [2,3,1]
-```
-
-### Ejemplo 1.3
-
-```
-root = []
-resultado = []
-```
-
-### Restricciones
-- La cantidad de nodos de un árbol se encuentra en el rango `[0,100]`.
-- Los valores de los nodos se encuentran en el rango `[-100,100]`.
-
-___
-
-## Ejercicio 2
-
 Dado el nodo `root` de un **árbol binario de búsqueda**, y un entero `k`, retorne el k-ésimo elemento más pequeño de todos los valores dentro del árbol.
 
-### Ejemplo 2.1
+### Ejemplo 1.1
 
 ![fork button](images/kthtree1.jpg)
 
@@ -78,7 +43,7 @@ root = [3,1,4,null,2], k = 1
 resultado = 1
 ```
 
-### Ejemplo 2.2
+### Ejemplo 1.2
 
 ![fork button](images/kthtree2.jpg)
 
@@ -89,11 +54,11 @@ resultado = 3
 
 ___
 
-## Ejercicio 3
+## Ejercicio 2
 
 Diseñe un [Árbol AVL](https://docs.google.com/presentation/d/1P_buvNRP-Hg6tWjlCQv6hDBCp-gQZ43p09UZV_VUq9M/edit?usp=sharing).
 
-Implemente los métodos de la clase `E03AVLTree`:
+Implemente los métodos de la clase `E02AVLTree`:
 
 - `E03AVLTree(Comparator<T> comparator)` instancia un árbol AVL, definiendo el comparador.
 - `void insert(T value)` inserta un valor `value`, utilizando `comparator`, en el árbol AVL. Tomar en cuenta que el árbol siempre debe estar balanceado después de cada llamada a **insert**.
@@ -105,7 +70,7 @@ Implemente los métodos de la clase `E03AVLTree`:
 ### Ejemplo 3.1
 
 ```java
-E03AVLTree<Integer> avlTree = new E03AVLTree<>(Integer::compare); // Crea un árbol AVL de números enteros.
+E02AVLTree<Integer> avlTree = new E02AVLTree<>(Integer::compare); // Crea un árbol AVL de números enteros.
 avlTree.search(5); // retorna null porque el árbol está vacío
 avlTree.insert(5); // almacena 5 en el árbol AVL
 avlTree.insert(3); // almacena 3 en el árbol AVL

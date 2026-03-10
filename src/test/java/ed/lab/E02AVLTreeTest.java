@@ -11,14 +11,14 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class E03AVLTreeTest {
+class E02AVLTreeTest {
 
     @ParameterizedTest
     @MethodSource("testArguments")
     void test(List<AVLOperations> operations) {
         List<AVLOperations> previousOps = new LinkedList<>();
 
-        E03AVLTree<Integer> avlTree = new E03AVLTree<>(Integer::compare);
+        E02AVLTree<Integer> avlTree = new E02AVLTree<>(Integer::compare);
 
         for (AVLOperations operation : operations) {
             final Integer result =
@@ -41,7 +41,7 @@ class E03AVLTreeTest {
     private static Stream<List<AVLOperations>> testArguments() {
         try {
             final String fileContent = new String(
-                    Objects.requireNonNull(E03AVLTreeTest.class.getClassLoader()
+                    Objects.requireNonNull(E02AVLTreeTest.class.getClassLoader()
                                     .getResourceAsStream("ed/lab/E03.csv"))
                             .readAllBytes());
 
@@ -95,8 +95,8 @@ class E03AVLTreeTest {
         }
     }
 
-    private static final Map<String, BiFunction<E03AVLTree<Integer>, Integer, Integer>> OPERATORS = Map.of(
-            "search", E03AVLTree::search,
+    private static final Map<String, BiFunction<E02AVLTree<Integer>, Integer, Integer>> OPERATORS = Map.of(
+            "search", E02AVLTree::search,
             "height", (avlTree, arg) -> avlTree.height(),
             "size", (avlTree, arg) -> avlTree.size(),
             "insert", (avlTree, arg) -> {

@@ -2,11 +2,11 @@ package ed.lab;
 
 import java.util.Comparator;
 
-public class E03AVLTree<T> {
+public class E02AVLTree<T> {
 
     private final Comparator<T> comparator;
 
-    public E03AVLTree(Comparator<T> comparator) {
+    public E02AVLTree(Comparator<T> comparator) {
         this.comparator = comparator;
     }
 
