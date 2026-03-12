@@ -14,29 +14,53 @@ public class E02AVLTree<T> {
     }
 
     public void insert(T value) {
+        // Inserta un valor en el árbol AVL
         root = insert(root, value);
     }
 
     private TreeNode<T> insert(TreeNode<T> node, T value) {
-        if (node == null) return new TreeNode<>(value);
+        if (node == null) {
+            // Si el nodo es nulo, crea uno nuevo
+            return new TreeNode<>(value);
+        }
         int cmp = comparator.compare(value, node.value);
         if (cmp < 0) {
             node.left = insert(node.left, value);
         } else if (cmp > 0) {
             node.right = insert(node.right, value);
         } else {
-            return node; // No duplicados
+            // No se permiten duplicados
+            return node;
         }
-        update(node);
-        return balance(node);
+        // Actualiza altura y tamaño
+        node.height = 1 + Math.max(height(node.left), height(node.right));
+        node.size = 1 + size(node.left) + size(node.right);
+        // Balancea el árbol
+        int bf = height(node.left) - height(node.right);
+        if (bf > 1) {
+            if (comparator.compare(value, node.left.value) > 0) {
+                node.left = rotateLeft(node.left);
+            }
+            return rotateRight(node);
+        }
+        if (bf < -1) {
+            if (comparator.compare(value, node.right.value) < 0) {
+                node.right = rotateRight(node.right);
+            }
+            return rotateLeft(node);
+        }
+        return node;
     }
 
     public void delete(T value) {
+        // Elimina un valor del árbol AVL
         root = delete(root, value);
     }
 
     private TreeNode<T> delete(TreeNode<T> node, T value) {
-        if (node == null) return null;
+        if (node == null) {
+            return null;
+        }
         int cmp = comparator.compare(value, node.value);
         if (cmp < 0) {
             node.left = delete(node.left, value);
@@ -49,8 +73,22 @@ public class E02AVLTree<T> {
             node.value = min.value;
             node.right = delete(node.right, min.value);
         }
-        update(node);
-        return balance(node);
+        node.height = 1 + Math.max(height(node.left), height(node.right));
+        node.size = 1 + size(node.left) + size(node.right);
+        int bf = height(node.left) - height(node.right);
+        if (bf > 1) {
+            if (height(node.left.left) < height(node.left.right)) {
+                node.left = rotateLeft(node.left);
+            }
+            return rotateRight(node);
+        }
+        if (bf < -1) {
+            if (height(node.right.right) < height(node.right.left)) {
+                node.right = rotateRight(node.right);
+            }
+            return rotateLeft(node);
+        }
+        return node;
     }
 
     private TreeNode<T> getMin(TreeNode<T> node) {
@@ -59,101 +97,87 @@ public class E02AVLTree<T> {
     }
 
     public T search(T value) {
+        // Busca un valor en el árbol AVL
         TreeNode<T> node = root;
         while (node != null) {
             int cmp = comparator.compare(value, node.value);
             if (cmp == 0) return node.value;
-            node = cmp < 0 ? node.left : node.right;
+            if (cmp < 0) node = node.left;
+            else node = node.right;
         }
         return null;
     }
 
     public int height() {
+        // Retorna la altura del árbol
         return height(root);
     }
 
     private int height(TreeNode<T> node) {
-        return node == null ? 0 : node.height;
+        if (node == null) return 0;
+        return node.height;
     }
 
     public int size() {
+        // Retorna el tamaño del árbol
         return size(root);
     }
 
     private int size(TreeNode<T> node) {
-        return node == null ? 0 : node.size;
+        if (node == null) return 0;
+        return node.size;
     }
 
     /**
      * Retorna el k-ésimo elemento más pequeño del árbol (1-based).
      * Lanza IllegalArgumentException si k es inválido.
      */
+    private int contador;
+    private T resultado;
+
     public T kthSmallest(int k) {
-        if (k < 1 || k > size()) {
-            throw new IllegalArgumentException("k fuera de rango");
-        }
-        int[] count = {0};
-        TreeNode<T>[] result = new TreeNode[1];
-        kthSmallestInOrder(root, k, count, result);
-        return result[0].value;
+        contador = 0;
+        resultado = null;
+        kthSmallestInOrder(root, k);
+        if (resultado == null) throw new IllegalArgumentException("k fuera de rango");
+        return resultado;
     }
 
     // Recorrido inorden para encontrar el k-ésimo elemento
-    private void kthSmallestInOrder(TreeNode<T> node, int k, int[] count, TreeNode<T>[] result) {
-        if (node == null || result[0] != null) return;
-        kthSmallestInOrder(node.left, k, count, result);
-        count[0]++;
-        if (count[0] == k) {
-            result[0] = node;
+    private void kthSmallestInOrder(TreeNode<T> node, int k) {
+        if (node == null) return;
+        kthSmallestInOrder(node.left, k);
+        contador++;
+        if (contador == k) {
+            resultado = node.value;
             return;
         }
-        kthSmallestInOrder(node.right, k, count, result);
+        kthSmallestInOrder(node.right, k);
     }
 
-    // --- AVL helpers ---
-    private void update(TreeNode<T> node) {
-        node.height = 1 + Math.max(height(node.left), height(node.right));
-        node.size = 1 + size(node.left) + size(node.right);
-    }
-
-    private int balanceFactor(TreeNode<T> node) {
-        return height(node.left) - height(node.right);
-    }
-
-    private TreeNode<T> balance(TreeNode<T> node) {
-        int bf = balanceFactor(node);
-        if (bf > 1) {
-            if (balanceFactor(node.left) < 0) {
-                node.left = rotateLeft(node.left);
-            }
-            return rotateRight(node);
-        }
-        if (bf < -1) {
-            if (balanceFactor(node.right) > 0) {
-                node.right = rotateRight(node.right);
-            }
-            return rotateLeft(node);
-        }
-        return node;
-    }
-
+    // Rotación simple a la derecha
     private TreeNode<T> rotateRight(TreeNode<T> y) {
         TreeNode<T> x = y.left;
         TreeNode<T> T2 = x.right;
         x.right = y;
         y.left = T2;
-        update(y);
-        update(x);
+        y.height = 1 + Math.max(height(y.left), height(y.right));
+        x.height = 1 + Math.max(height(x.left), height(x.right));
+        y.size = 1 + size(y.left) + size(y.right);
+        x.size = 1 + size(x.left) + size(x.right);
         return x;
     }
 
+    // Rotación simple a la izquierda
     private TreeNode<T> rotateLeft(TreeNode<T> x) {
         TreeNode<T> y = x.right;
         TreeNode<T> T2 = y.left;
         y.left = x;
         x.right = T2;
-        update(x);
-        update(y);
+        x.height = 1 + Math.max(height(x.left), height(x.right));
+        y.height = 1 + Math.max(height(y.left), height(y.right));
+        x.size = 1 + size(x.left) + size(x.right);
+        y.size = 1 + size(y.left) + size(y.right);
         return y;
     }
 }
